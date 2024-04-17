@@ -46,9 +46,9 @@ if let newNum=num{
     ///code to executed when num is nil
 }
 
-guard let newNum=num else {
-//    return
-}
+//guard let newNum=num else {
+////    return
+//}
 
 /// 3:- Nil Coalescing Operator
 ///  Use to unwrap an optional if there is a vlaue return rthe value if the value is nil then use the default value instead
@@ -91,25 +91,50 @@ closure() // what will be the output
 ///   what if we remove [thing] array in it then the output will be "I love airplanes"
 
 // :- Question
-func countUniques<T: Comparable>(_ array: Array<T>) -> Int {
-    let sorted = array.sorted()
-    let initial: (T?, Int) = (.none, 0) //
-    let reduced = sorted.reduce(initial) {
-        ($1, $0.0 == $1 ? $0.1 : $0.1 + 1)
-    }
-     return reduced.1
-}
+//func countUniques<T: Comparable>(_ array: Array<T>) -> Int {
+//    let sorted = array.sorted()
+//    let initial: (T?, Int) = (.none, 0) //
+//    let reduced = sorted.reduce(initial) {
+//        ($1, $0.0 == $1 ? $0.1 : $0.1 + 1)
+//    }
+//     return reduced.1
+//}
 
 print(countUniques([4,5,6,7,6,7]))
 /// modified countUniques in such a way that it can be executed like this [4,5,6,7,6,7].countUniques()
 
-extension Array where Element:Comparable{
-    func countUniques()->Int{
-        let sorted=self.sorted()
-        let initial: (Element?, Int) = (.none, 0)
-        let reduced = sorted.reduce(initial){
-            ($1, $0.0 == $1 ? $0.1 : $0.1 + 1)
-        }
-        return reduced.1
-    }
-}
+//extension Array where Element:Comparable{
+//    func countUniques()->Int{
+//        let sorted=self.sorted()
+//        let initial: (Element?, Int) = (.none, 0)
+//        let reduced = sorted.reduce(initial){
+//            ($1, $0.0 == $1 ? $0.1 : $0.1 + 1)
+//        }
+//        return reduced.1
+//    }
+//}
+
+
+
+//let str="I Love Code"
+//var ans=""
+//for i in str{
+//    ans = String(i) + ans
+//}
+//print(ans)
+
+//func fetchImage() async throws -> [UIImage]{
+//    return [UIImage]
+//}
+//func imageFetch(completion: (Result<[UIImage], Error>)-> Void){
+//    
+//}
+//
+//enum MyError<Success, Failure> where Failure:Error{
+//    case success(Success)
+//    
+//    case failure(Failure)
+//}
+//UIView
+
+var name:String?="Kashif"

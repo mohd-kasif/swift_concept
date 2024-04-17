@@ -217,9 +217,127 @@ let incrementByTen = makeIncrementer(forIncrement: 10)
 //obj.updatePrice(newPrice: &a)
 //print(obj.price)
 
+//----------------------------------------------------Topic:-Initialization--------------------------------------------------------//
+
+// It is the process of preparing of instance of class, struct and enum for use.
+/// Unlike objective-C initializzers swift initilizers dont return values.
+/// Their primary role is to ensure that new instances of a type are correctly initialized before they’re used for the first time.
+
+///Classes and structures must set all of their stored properties to an appropriate initial value by
+///the time an instance of that class or structure is created. Stored properties can’t be left in an indeterminate state
+
+/// We can set stored property of type within initializer or providing a default value.
+///
+/// initializer are called to create new instance of particular type. It is like a instance method with no parameter.
+///  Ex:- init(){   perform some initiliazton here}
+
+struct Celcius{
+    var temperature:Double
+    init(fromFahrenheit fahrenhrit:Double) {
+        self.temperature=(fahrenhrit-32)/1.8
+    }
+    init(fromKelvin kelvin:Double) {
+        self.temperature=kelvin-273.15
+    }
+}
+
+let fahrenheit=Celcius(fromKelvin: 73.15)
+let kelvin=Celcius(fromFahrenheit: 212.65)
+
+/// Properie sof optional type are automatically initialized with a value of nil, indicating that the property is deliberately intended to have “no value yet” during initialization
+class SurveyQuestion{
+    var text:String?
+    var response:String?
+    init(text: String) {
+        self.text = text
+    }
+    
+    func ask(){
+        print(text as Any,"text in ask function")
+    }
+}
+
+let question=SurveyQuestion(text: "how are you")
+print(question.response as Any)
+question.response="i am fine"
+
+//Memberwise Initializers for Structure Types
+
+///Unlike a default initializer, the structure receives a memberwise initializer even if it has stored properties that don’t have default values.
+
+struct Size{
+    var width=4.5
+    var length=3.2
+}
+
+var obj=Size(width: 2, length: 2)
+/// Size struct provide you memeberwise initializer when you create instance of Size it gives you memeberwise initializer
+///  Also we can omit any property that have default values
+var omitProperty=Size(length:23)  // omit width property
+
+// Initializers Delegation
+/// Initializers can call other initializers to perform part of an instance’s initialization. This process, known as initializer delegation, avoids duplicating code across multiple initializers
+/// The rules for ini Initializers Delgation are different for value type and reference type for struct and enum it is simple because they dont support inheritance we can call other init method of same struct and enum with self.init()
+
+//------------------------------------------------Class Inheritance and Initialization--------------------------------------------//
+// Swift defines two kinds of initializers for class types to help ensure all stored properties receive an initial value.
+//  These are known as designated initializers and convenience initializers
 
 
+///Designated initializers are the primary initializers for a class. A designated initializer fully initializes all properties introduced by that class and calls an appropriate superclass initializer to continue the initialization process up the superclass chain
+
+///Convenience initializers are secondary, supporting initializers for a class.You can define a convenience initializer to call a designated initializer from the same class as the convenience initializer with some of the designated initializer’s parameters set to default values. You can also define a convenience initializer to create an instance of that class for a specific use case or input value type.
+
+class Vehicel{
+    var numberOfWheels=2
+    var description:String{
+        return "\(numberOfWheels) wheels"
+    }
+}
+let vehicel=Vehicel() // Vwhcile provide deafult initilizer for sored property
+//The default initializer (when available) is always a designated initializer for a class
+
+//print(vehicel.description)
 
 
+class Car:Vehicel{
+    override init() { /// the bicyle provide a custom designated initializer, init(). This designated matheces the designated initalizer from the supercalss of Car which is Vehicle,
+        super.init()  /// so the init of this class marked with override modifier, it start calling the designated init of superclass(Vehicle),
+        numberOfWheels=4 ///This ensures that the numberOfWheels inherited property is initialized by Vehicle before Car has the opportunity to modify the property
+        /// After calling super.init(), the original value of numberOfWheels is replaced with a new value of 2.
+    }
+}
+
+var car=Car()
+print(car.description)
 
 
+//------------------------------------Designated and Convenience Initializers in Actionin-------------------------------//
+
+/// Food class of one property name and two initializers
+class Food{
+    var name:String
+    /// this initializer is used to create new Food instance with speicific name
+    init(name: String) { /// class dont have memberwise initializer  so the Food provide a desognated initializer that take a single argument.
+        self.name = name
+    }
+    convenience init(){
+        self.init(name: "Unnamed")
+    }
+}
+
+//let food=Food()
+//let food1=Food(name: "Mutton")
+//print(food.name)
+
+
+class RecipeIngredient: Food {
+    var quantity: Int
+    init(name: String, quantity: Int) {
+        self.quantity = quantity
+        super.init(name: name)
+    }
+    override convenience init(name: String) {
+        self.init(name: name, quantity: 1)
+    }
+}
