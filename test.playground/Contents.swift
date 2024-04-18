@@ -341,3 +341,81 @@ class RecipeIngredient: Food {
         self.init(name: name, quantity: 1)
     }
 }
+
+
+
+//------------------------------------------------------Topic :-  Optional Chaining-------------------------------------------------//
+
+
+//Optional chaining is a process for querying and calling properties,
+//methods, and subscripts on an optional that might currently be nil.
+//If the optional contains a value, the property, method, or subscript call succeeds; if the optional is nil, the property, method, or subscript call returns nil
+
+// Example:-
+
+// Here we define a class with one stored optional property member and a function whcih takes one parameter
+class SomeClass{
+    var member:String?
+    
+    func setMemeber(member:String){
+        self.member=member
+    }
+}
+
+var someClass:SomeClass?  // here we define a instance, currently it has no value so it is nil
+
+if someClass?.setMemeber(member: "kashif") != nil{ /// here we are accesing memebr of optional instance setMemebr someClass is nil so the method is accessing will not
+    print("Attached")                                   /// succeed and it print "Not Attached"
+} else {
+    print("Not attached")
+}
+
+
+//------------------------------------------------------Topic :-  Error Handling------------------------------------------------------//
+
+//Error handling is the process of responding to and recovering from error conditions in your program.
+//Swift provides first-class support for throwing, catching, propagating, and manipulating recoverable errors at runtime.
+
+// :- Representing and Throwing Errors
+///In Swift, errors are represented by values of types that conform to the Error protocol.
+///This empty protocol indicates that a type can be used for error handling.
+
+
+enum APiError:Error{ /// enum is particularly well suited to modelling a group related error condition,
+    case requestFailed(description:String, erroCode:String="")/// associated value for allowing info about nature of error to be communicated
+    case invalidData
+    case notFound(description:String)
+}
+
+//Throwing an error lets you indicate that something unexpected happened and the normal flow of execution can’t continue.
+
+
+// Handling Errors:-
+
+/// when error is occured, some surronding piece of code responsible for handling those error
+///
+struct Person{
+    var name:String
+    var age:Int
+}
+
+class FetchName{
+    var person=["Kashif":Person(name: "kashif", age: 24),
+                "Aquib":Person(name: "aquib", age: 23),
+                "Akhlad":Person(name: "akhlad", age: 15)
+    ]
+    
+    var personAge=90
+    func findName(name:String) throws{
+        guard let name=person[name] else {
+            throw APiError.notFound(description: "Requested Data Not Found")
+        }
+    }
+}
+
+var fetchname=FetchName()
+do{
+    try fetchname.findName(name: "Kshif")
+} catch {
+    print(error,"Error")
+}
