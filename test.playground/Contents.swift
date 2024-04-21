@@ -419,3 +419,238 @@ do{
 } catch {
     print(error,"Error")
 }
+
+
+//------------------------------------------------------Topic :-  Concurrency----------------------------------------------------------//
+
+
+func listPhotos(inGallery name:String) async throws -> [String]{
+    try await Task.sleep(for: .seconds(2))
+    return ["ABC","XYZ","FIntech"]
+}
+
+do {
+    let phtos=try await listPhotos(inGallery: "Mine")
+}catch{
+    print(error,"error")
+}
+
+// Task and Task Group
+
+/// Task is unit of work that can be run asynchronously as a ppart of your program. All asynchronous code run as part of task. A taks does itself does one tihing at a time but when you
+/// create multiple task, Swift can schedult them to run simultaneously
+
+
+// Actors :-
+/// You can use tasks to break up your program into isolated, concurrent pieces. 
+/// Tasks are isolated from each other, which is what makes it safe for them to run at the same time,
+/// but sometimes you need to share some information between tasks. Actors let you safely share information between concurrent code.
+
+// Actors are reference type and does not support inheritance
+/// Unlike classes, actors allow only one task to access their mutable state at a time, which makes it safe for code in multiple tasks to interact with the same instance of an actor.
+
+
+actor TemperatureLogger {
+    let label: String
+    var measurements: [Int]
+    private(set) var max: Int ///  restricts the max property so only code inside the actor can update the maximum value
+
+
+    init(label: String, measurement: Int) {
+        self.label = label
+        self.measurements = [measurement]
+        self.max = measurement
+    }
+}
+//if 1==1{
+//    let logger=TemperatureLogger(label: "outdoor", measurement: 25)
+//    print(await logger.max)
+//}
+
+
+//------------------------------------------------------Topic :-  Type Casting----------------------------------------------------------//
+
+//Type casting is a way to check the type of an instance, or to treat that instance as a different superclass or subclass from somewhere else in its own class hierarchy.
+
+//Type casting in Swift is implemented with the is and as operators
+
+
+class MediaItem{
+    var name:String
+    init(name: String) {
+        self.name = name
+    }
+}
+
+class Movie:MediaItem{
+    var directir:String
+    init(name:String,directir: String) {
+        self.directir = directir
+        super.init(name: name)
+    }
+}
+class Song:MediaItem{
+    var artist:String
+    init(name:String,artist: String) {
+        self.artist = artist
+        super.init(name:name)
+    }
+}
+
+let library=[Movie(name: "Avatar", directir: "James Cameron"),
+             Song(name: "Summer of 69", artist: "Bryn admas"),
+             Movie(name: "Dune", directir: "Deniis Vellibe"),
+             Movie(name: "Intersteller", directir: "Nolan"),
+             Song(name: "Popular", artist: "Weekend")
+]
+
+for i in library{
+    print(type(of: i),"type of")
+}
+
+
+// Nested Type
+/// Define types inside the scope of another type.
+
+//------------------------------------------------------Topic :-  Extensions----------------------------------------------------------//
+
+// Extensions add new functionality to existing class, struct, enum, or protocol type
+
+
+extension SomeClass{
+    // new functinlaity
+}
+
+
+extension Double{
+    var km:Double {return self * 1000.0}
+    var m:Double{return self}
+    var cm:Double{return self/100.0}
+}
+
+
+let oneKm=4.km
+print(oneKm)
+
+// Extension can add new initializer to existing type
+///Extensions can add new convenience initializers to a class, but they can’t add new designated initializers or deinitializers to a class. Designated initializers and deinitializers must always be provided by the original class implementation.
+
+
+//------------------------------------------------------Topic :-  Protocol----------------------------------------------------------//
+
+// A protocol defines blueprint of properties, methods, and other requirement for a that suit a particular task and other peice of functionality.
+// And then protocol can be adapted by class, struct, enum to provide actual implementation of those requirement
+///Any type that satisfies the requirements of a protocol is said to conform to that protocol.
+///
+///If a class has a superclass, list the superclass name before any protocols it adopts, followed by a comma:
+
+class SomeClass:SuperClass, FirstPRotocol, SecondProtocol{
+    
+}
+
+
+//------------------------------------------------------Topic :-  Generics----------------------------------------------------------//
+
+//Generic code enables you to write flexible, reusable functions and types that can work with any type,.
+//subject to requirements that you define.
+//You can write code that avoids duplication and expresses its intent in a clear, abstracted manner.
+///Swift’s Array and Dictionary types are both generic collections.
+///You can create an array that holds Int values, or an array that holds String values, or indeed an array for any other type that can be created in Swift
+
+
+//The Problem That Generics Solve:---
+
+
+/// function adding two integer and returning its sum
+func twoSum(a:Int, b:Int)->Int{
+    return a+b
+}
+
+print(twoSum(a: 3, b: 4))
+
+/// function adding two double and returning its sum
+func twoSum(a: Double, b:Double)->Double{
+    return a+b
+}
+
+print(twoSum(a: 4.3, b: 5.4))
+
+
+// func that accet both int and double type
+
+func genericTwoSum<T:Numeric>(a:T, b:T)->T{  /// palceholder T in angle bracket told us that
+    return a+b                              /// The brackets tell Swift that T is a placeholder type name within the genericTwoSum(a:,b:) function definition.
+}                                           ///  Because T is a placeholder, Swift doesn’t look for an actual type called T.
+
+print(genericTwoSum(a: 4, b: 5))
+print(genericTwoSum(a: 4.4, b: 5))
+
+// Type Parameter :---
+
+//In the genericTwoSum(_:_:) example above, the placeholder type T is an example of a type parameter.
+//Type parameters specify and name a placeholder type, and are written immediately after the function’s name,
+//between a pair of matching angle brackets (such as <T>)
+
+
+//Generic Types:----
+///In addition to generic functions, Swift enables you to define your own generic types.
+///These are custom classes, structures, and enumerations that can work with any type, in a similar way to Array and Dictionary.
+
+
+//  Lets create a stack of genric type
+
+struct Stack<T>{
+    var item:[T]=[]
+    
+    mutating func push(item:T){
+        self.item.append(item)
+    }
+    mutating func pop()->T{
+        if !item.isEmpty{
+            item.removeLast()
+        }
+    }
+}
+
+var stack=Stack<String>()
+stack.push(item: "")
+
+// When you extend a genericn type you dont need to provide the type parameter part of your extension body
+
+extension Stack{
+    var topItem:T?{
+        return item.isEmpty ? nil : item[item.count-1]
+    }
+}
+
+
+// Associated Types :-----
+
+//When defining a protocol, it’s sometimes useful to declare one or more associated types as part of the protocol’s definition.
+//An associated type gives a placeholder name to a type that’s used as part of the protocol.
+//The actual type to use for that associated type isn’t specified until the protocol is adopted.
+//Associated types are specified with the associatedtype keyword
+
+protocol Container{
+    associatedtype Item
+    mutating func push(item:Item)
+    var count:Int{get}
+    subscript(i:Int)-> Item {get}
+}
+
+
+struct IntStack:Container{
+    typealias Item = Int  /// Here we specifies that for this implementation of Container, the appropriate Item to use is a type of Int
+    var item: [Item]=[]   ///IntStack specifies that for this implementation of Container, the appropriate Item to use is a type of Int
+    mutating func push(item: Item) {
+        self.item.append(item)
+    }
+    
+    subscript(i: Int) -> Item {
+        return item[i]
+    }
+    
+    var count: Int{
+        return item.count
+    }
+}
